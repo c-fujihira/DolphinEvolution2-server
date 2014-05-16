@@ -245,7 +245,7 @@ public class PvtService implements PvtServiceMBean {
         @Override
         public void run() {
 
-            BufferedInputStream reader;
+            BufferedInputStream reader = null;
             BufferedOutputStream writer = null;
             javax.jms.Connection conn = null;
 
@@ -307,7 +307,9 @@ public class PvtService implements PvtServiceMBean {
                 }
 
                 reader.close();
+                reader = null;
                 writer.close();
+                writer = null;
                 client.close();
                 client = null;
 
@@ -317,6 +319,27 @@ public class PvtService implements PvtServiceMBean {
                 warn(e.getMessage());
 
             } finally {
+                
+                if (reader != null) {
+                    try {
+                        reader.close();
+                        reader = null;
+                    } catch (IOException e2) {
+                        e2.printStackTrace(System.err);
+                        warn(e2.getMessage());
+                    }
+                }
+                
+                if (writer != null) {
+                    try {
+                        writer.close();
+                        writer = null;
+                    } catch (IOException e2) {
+                        e2.printStackTrace(System.err);
+                        warn(e2.getMessage());
+                    }
+                }
+                
                 if (conn != null) {
                     try {
                         conn.close();

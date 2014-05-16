@@ -93,7 +93,13 @@ public class ServletStartup {
     public void pvtChange() {
 
         ServerConfigrationModel cfg = servCfgBean.getStatusQuery();
-
+        
+        //- レコード削除の場合、Init
+        if(cfg == null) {
+            initServCfgBean.start();
+            return;
+        }
+        
         String charInit = cfg.getInitTime().trim();
         String charRest = cfg.getRestartTime().trim();
         Pattern chkPtn = Pattern.compile("^[0-9]{4}$");

@@ -36,32 +36,32 @@
  * Public License, version 3 (GPLv3) This is free software, and you are welcome to redistribute 
  * it under certain conditions; see the GPLv3 for details.
  */
-package open.dolphin.toucha.model;
-
-import open.dolphin.infomodel.RegisteredDiagnosisModel;
-
-/**
- * DiagnosisModelS
- *
- * @author masuda, Masuda Naika
- * @author modified Chikara Fujihira <fujihirach@sandi.co.jp>, S&I Co.,Ltd.
- */
-public class DiagnosisModelS {
-
-    private String diagnosis;
-    private String category;
-    private String outcome;
-    private String started;
-    private String ended;
-
-    public DiagnosisModelS() {
-    }
-
-    public DiagnosisModelS(RegisteredDiagnosisModel rd) {
-        diagnosis = rd.getDiagnosis();
-        category = rd.getCategoryDesc();
-        outcome = rd.getOutcomeDesc();
-        started = rd.getStartDate();
-        ended = rd.getEndDate();
-    }
-}
+//package open.dolphin.toucha.model;
+//
+//import open.dolphin.infomodel.RegisteredDiagnosisModel;
+//
+///**
+// * DiagnosisModelS
+// *
+// * @author masuda, Masuda Naika
+// * @author modified Chikara Fujihira <fujihirach@sandi.co.jp>, S&I Co.,Ltd.
+// */
+//public class DiagnosisModelS {
+//
+//    private String diagnosis;
+//    private String category;
+//    private String outcome;
+//    private String started;
+//    private String ended;
+//
+//    public DiagnosisModelS() {
+//    }
+//
+//    public DiagnosisModelS(RegisteredDiagnosisModel rd) {
+//        diagnosis = rd.getDiagnosis();
+//        category = rd.getCategoryDesc();
+//        outcome = rd.getOutcomeDesc();
+//        started = rd.getStartDate();
+//        ended = rd.getEndDate();
+//    }
+//}

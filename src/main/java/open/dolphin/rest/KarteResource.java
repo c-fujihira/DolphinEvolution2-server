@@ -59,7 +59,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import open.dolphin.converter.*;
+import open.dolphin.converter.KarteBeanListConverter;
 import open.dolphin.infomodel.*;
 import open.dolphin.session.KarteServiceBean;
 import open.dolphin.session.PVTServiceBean;
@@ -152,17 +152,23 @@ public class KarteResource extends AbstractResource {
     @GET
     @Path("/documents/{param}")
     @Produces(MediaType.APPLICATION_JSON)
-    public DocumentListConverter getDocuments(@PathParam("param") String param) {
+    public DocumentListConverter getDocuments(@Context HttpServletRequest servletReq, @PathParam("param") String param) {
 
         debug(param);
         String[] params = param.split(CAMMA);
-        List<Long> list = new ArrayList<Long>(params.length);
+        List<Long> list = new ArrayList<>(params.length);
         for (String s : params) {
             list.add(Long.parseLong(s));
         }
 
+        //- debug
+        //System.out.println("debug->" + servletReq.getHeader("clientVersion"));
+        String clientVersion = servletReq.getHeader("clientVersion");
+        
         List<DocumentModel> result = karteServiceBean.getDocuments(list);
-
+        
+//        if(clientVersion.isEmpty()) {
+//        }
         DocumentList wrapper = new DocumentList();
         wrapper.setList(result);
 
@@ -308,8 +314,8 @@ public class KarteResource extends AbstractResource {
         long karteId = Long.parseLong(params[0]);
         String entity = params[1];
 
-        List<Date> fromList = new ArrayList<Date>();
-        List<Date> toList = new ArrayList<Date>();
+        List<Date> fromList = new ArrayList<>();
+        List<Date> toList = new ArrayList<>();
 
         int index = 2;
 
@@ -344,8 +350,8 @@ public class KarteResource extends AbstractResource {
         String[] params = param.split(CAMMA);
         long karteId = Long.parseLong(params[0]);
 
-        List<Date> fromList = new ArrayList<Date>();
-        List<Date> toList = new ArrayList<Date>();
+        List<Date> fromList = new ArrayList<>();
+        List<Date> toList = new ArrayList<>();
 
         int index = 1;
 
@@ -410,7 +416,9 @@ public class KarteResource extends AbstractResource {
     @Produces(MediaType.TEXT_PLAIN)
     public String postPutSendDiagnosis(String json) throws IOException {
 
-        System.err.println(json);
+        //- Log記載修正
+        //System.err.println(json);
+        System.out.println(json);
 
         ObjectMapper mapper = new ObjectMapper();
         // 2013/06/24
@@ -481,7 +489,7 @@ public class KarteResource extends AbstractResource {
 
         debug(param);
         String[] params = param.split(CAMMA);
-        List<Long> list = new ArrayList<Long>(params.length);
+        List<Long> list = new ArrayList<>(params.length);
         for (String s : params) {
             list.add(Long.parseLong(s));
         }
@@ -566,7 +574,7 @@ public class KarteResource extends AbstractResource {
 
         debug(param);
         String[] params = param.split(CAMMA);
-        List<Long> list = new ArrayList<Long>(params.length);
+        List<Long> list = new ArrayList<>(params.length);
         for (String s : params) {
             list.add(Long.parseLong(s));
         }
@@ -605,8 +613,8 @@ public class KarteResource extends AbstractResource {
         String[] params = param.split(CAMMA);
         long karteId = Long.parseLong(params[0]);
 
-        List<Date> fromList = new ArrayList<Date>();
-        List<Date> toList = new ArrayList<Date>();
+        List<Date> fromList = new ArrayList<>();
+        List<Date> toList = new ArrayList<>();
 
         int index = 1;
 
@@ -669,7 +677,7 @@ public class KarteResource extends AbstractResource {
         long karteId = Long.parseLong(params[0]);
         Date fromDate = parseDate(params[1] + " 00:00:00");
         Date toDate = parseDate(params[2] + " 00:00:00");
-        List<String> entities = new ArrayList<String>();
+        List<String> entities = new ArrayList<>();
         for (int i = 3; i < params.length; i++) {
             entities.add(params[i]);
         }

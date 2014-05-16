@@ -19,10 +19,6 @@ package open.dolphin.session;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.ejb.TransactionManagement;
-import javax.ejb.TransactionManagementType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import open.dolphin.infomodel.ServerConfigrationModel;
@@ -33,8 +29,6 @@ import open.dolphin.infomodel.ServerConfigrationModel;
  * @author Chikara Fujihira <fujihirach@sandi.co.jp>
  */
 @Stateless
-@TransactionManagement(TransactionManagementType.BEAN)
-@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 public class ServerConfigrationBean {
    
     private final String CFG_QUERY = " from ServerConfigrationModel ";
@@ -52,6 +46,7 @@ public class ServerConfigrationBean {
             cfg = (ServerConfigrationModel) em.createQuery(CFG_QUERY).getSingleResult();
         } catch (Exception e) {
             Logger.getLogger("open.dolphin").log(Level.WARNING ,"ServerConfigration QueryError. {0}", e.getMessage());
+            return null;
         }
         return cfg;
     }

@@ -39,6 +39,7 @@
 package open.dolphin.rest;
 
 import java.io.IOException;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.inject.Inject;
 import javax.servlet.AsyncContext;
@@ -107,66 +108,72 @@ public class ChartEventResource extends AbstractResource {
         debug("subscribers count = " + subscribers);
 //minagawa$        
 
-        ac.addListener(new AsyncListener() {
+        try {
 
-            private void remove() {
-                // JBOSS終了時にぬるぽ？
-                Logger.getLogger("open.dolphin").info("ac remove");
-                try {
-                    contextHolder.removeAsyncContext(ac);
-                } catch (NullPointerException ex) {
+            ac.addListener(new AsyncListener() {
+                private void remove() {
+                    // JBOSS終了時にぬるぽ？
+                    Logger.getLogger("open.dolphin").info("ac remove");
+                    try {
+                        contextHolder.removeAsyncContext(ac);
+                    } catch (NullPointerException ex) {
+                    }
                 }
-            }
 
-            @Override
-            public void onComplete(AsyncEvent event) throws IOException {
-                Logger.getLogger("open.dolphin").info("ac onComplete");
-            }
+                @Override
+                public void onComplete(AsyncEvent event) {
+                    Logger.getLogger("open.dolphin").info("ac onComplete");
+                }
 
-            @Override
-            public void onTimeout(AsyncEvent event) throws IOException {
-                Logger.getLogger("open.dolphin").info("ac onTimeout");
-                remove();
-                //System.out.println("ON TIMEOUT");
-                //event.getThrowable().printStackTrace(System.out);
-            }
+                @Override
+                public void onTimeout(AsyncEvent event) {
+                    Logger.getLogger("open.dolphin").info("ac onTimeout");
+                    remove();
+                }
 
-            @Override
-            public void onError(AsyncEvent event) throws IOException {
-                Logger.getLogger("open.dolphin").info("ac onError");
-                remove();
-                //System.out.println("ON ERROR");
-                //event.getThrowable().printStackTrace(System.out);
-            }
+                @Override
+                public void onError(AsyncEvent event) {
+                    Logger.getLogger("open.dolphin").info("ac onError");
+                    remove();
+                }
 
-            @Override
-            public void onStartAsync(AsyncEvent event) throws IOException {
-                Logger.getLogger("open.dolphin").info("ac onStartAsync");
-            }
-        });
+                @Override
+                public void onStartAsync(AsyncEvent event) {
+                    Logger.getLogger("open.dolphin").info("ac onStartAsync");
+                }
+            });
+        } catch (Exception e) {
+            Logger.getLogger("open.dolphin").log(Level.WARNING, "サーブレット内で通知エラーが発生しました。{0}", e.getMessage());
+        }
     }
 
     @PUT
     @Path("/event")
     @Consumes()
     @Produces(MediaType.APPLICATION_JSON)
-    public String putChartEvent(String json) throws IOException {
+    public String putChartEvent(String json) {
 
 //minagawa^ resteasyを使用
 //        ChartEventModel msg = (ChartEventModel)
 //                getConverter().fromJson(json, ChartEventModel.class);
 //        int cnt = eventServiceBean.processChartEvent(msg);
 //        return String.valueOf(cnt);
-        debug("putChartEvent did call");
-        ObjectMapper mapper = new ObjectMapper();
-        // 2013/06/24
-        mapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        ChartEventModel msg = mapper.readValue(json, ChartEventModel.class);
-        StringBuilder sb = new StringBuilder();
-        sb.append("\n").append("putChartEvent\n").append(msg.toString());
-        Logger.getLogger("open.dolphin").info(sb.toString());
-        int cnt = eventServiceBean.processChartEvent(msg);
-        return String.valueOf(cnt);
+        int cnt = 0;
+        try {
+            debug("putChartEvent did call");
+            ObjectMapper mapper = new ObjectMapper();
+            // 2013/06/24
+            mapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            ChartEventModel msg = mapper.readValue(json, ChartEventModel.class);
+            StringBuilder sb = new StringBuilder();
+            sb.append("\n").append("putChartEvent\n").append(msg.toString());
+            Logger.getLogger("open.dolphin").info(sb.toString());
+            cnt = eventServiceBean.processChartEvent(msg, servletReq);
+            return String.valueOf(cnt);
+        } catch (IOException e) {
+            Logger.getLogger("open.dolphin").log(Level.WARNING, "サーブレット内で通知エラーが発生しました。{0}", e.getMessage());
+        }
+        return null;
 //minagawa$        
     }
 
@@ -176,20 +183,20 @@ public class ChartEventResource extends AbstractResource {
     @Path("/dispatch")
     @Produces(MediaType.APPLICATION_JSON)
     public ChartEventModelConverter deliverChartEvent() {
-
-//minagawa^ resteasyを使用
-//        ChartEventModel msg = (ChartEventModel)servletReq.getAttribute(KEY_NAME);
-//        String json = getConverter().toJson(msg);
-//        return json;
-        debug("deliverChartEvent did call");
-        ChartEventModel msg = (ChartEventModel) servletReq.getAttribute(KEY_NAME);
-        StringBuilder sb = new StringBuilder();
-        sb.append("\n").append("deliverChartEvent\n").append(msg.toString());
-        Logger.getLogger("open.dolphin").info(sb.toString());
         ChartEventModelConverter conv = new ChartEventModelConverter();
-        conv.setModel(msg);
+        try {
+            debug("deliverChartEvent did call");
+            ChartEventModel msg = (ChartEventModel) servletReq.getAttribute(KEY_NAME);
+            StringBuilder sb = new StringBuilder();
+            sb.append("\n").append("deliverChartEvent\n").append(msg.toString());
+            Logger.getLogger("open.dolphin").info(sb.toString());
+            conv = new ChartEventModelConverter();
+            conv.setModel(msg);
+            return conv;
+        } catch (Exception e) {
+            Logger.getLogger("open.dolphin").log(Level.WARNING, "サーブレット内で通知エラーが発生しました。{0}", e.getMessage());
+        }
         return conv;
-//minagawa$          
     }
 
     @Override

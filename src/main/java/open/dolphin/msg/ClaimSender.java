@@ -231,9 +231,12 @@ public class ClaimSender {
         VelocityContext context = VelocityHelper.getContext();
         context.put(OBJECT_NAME, helper);
         StringWriter sw = new StringWriter();
-        try (BufferedWriter bw = new BufferedWriter(sw)) {
+        BufferedWriter bw = new BufferedWriter(sw);
+        try {
             Velocity.mergeTemplate(TEMPLATE_NAME, TEMPLATE_ENC, context, bw);
             bw.flush();
+        } finally {
+            bw.close();
         }
         String claimMessage = sw.toString();
 //minagawa^ CLAIM Log INFOで          

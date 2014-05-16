@@ -53,6 +53,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.AsyncContext;
+import javax.servlet.http.HttpServletRequest;
 import open.dolphin.infomodel.*;
 import open.dolphin.mbean.ServletContextHolder;
 import open.dolphin.rest.ChartEventResource;
@@ -143,17 +144,26 @@ public class ChartEventServiceBean {
      * ChartEventModelを処理する
      *
      * @param evt
+     * @param servletReq
      * @return
      */
-    public int processChartEvent(ChartEventModel evt) {
+    public int processChartEvent(ChartEventModel evt, HttpServletRequest servletReq) {
 
         int eventType = evt.getEventType();
+        PatientModel getKarte = em.find(PatientModel.class, evt.getPtPk());
 
-//        if (true) {
-//            StringBuilder sb = new StringBuilder();
-//            sb.append("ChartEventServiceBean: ").append(eventType).append(" will issue");
-//            log(sb.toString());
-//        }
+        //- カルテロック解除時のログ記述
+        StringBuilder ms = new StringBuilder();
+        //if(getKarte.getOwnerUUID() == null || evt.getOwnerUUID() == null) {
+        if(evt.getOwnerUUID() == null) {
+            ms.append("カルテのロックを解放します。");
+        } else {
+            ms.append("カルテのロックを変更します。");
+        }
+        ms.append(" User -> ").append(servletReq.getHeader("userName"));
+        ms.append(" Patient -> ").append(getKarte.getPatientId());
+        Logger.getLogger("open.dolphin").log(Level.INFO, "{0}", ms);
+        
         switch (eventType) {
             case ChartEventModel.PVT_DELETE:
                 processPvtDeleteEvent(evt);

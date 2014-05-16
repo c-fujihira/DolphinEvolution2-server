@@ -201,8 +201,28 @@ public class PatientResource extends AbstractResource {
 //minagawa^ 仮保存カルテ取得対応
     @GET
     @Path("/documents/status")
+    @Produces(MediaType.APPLICATION_JSON)
+    public PatientListConverter getDocumentsByStatus(@Context HttpServletRequest servletReq) {
+
+        String fid = getRemoteFacility(servletReq.getRemoteUser());
+
+        List result = patientServiceBean.getTmpKarte(fid);
+        PatientList list = new PatientList();
+        list.setList(result);
+
+        PatientListConverter conv = new PatientListConverter();
+        conv.setModel(list);
+
+        return conv;
+        
+    }
+//minagawa$
+
+    //- DolEvo 仮保存カルテ取得対応
+    @GET
+    @Path("/documents/status2")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    public StreamingOutput getDocumentsByStatus(@Context HttpServletRequest servletReq) {
+    public StreamingOutput getDocumentsByStatus2(@Context HttpServletRequest servletReq) {
 
         String fid = getRemoteFacility(servletReq.getRemoteUser());
 
@@ -222,8 +242,7 @@ public class PatientResource extends AbstractResource {
             }
         };
     }
-//minagawa$
-
+    
     @GET
     @Path("/name/{param}")
     @Produces(MediaType.APPLICATION_JSON)

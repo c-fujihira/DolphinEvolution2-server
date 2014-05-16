@@ -36,40 +36,40 @@
  * Public License, version 3 (GPLv3) This is free software, and you are welcome to redistribute 
  * it under certain conditions; see the GPLv3 for details.
  */
-package open.dolphin.toucha.model;
-
-import open.dolphin.infomodel.PatientVisitModel;
-
-/**
- * PatientVisitModelS
- *
- * @author masuda, Masuda Naika
- * @author modified Chikara Fujihira <fujihirach@sandi.co.jp>, S&I Co.,Ltd.
- */
-public class PatientVisitModelS {
-
-    private String pvtDate;
-    private String patientId;
-    private String patientName;
-    private String patientAge;
-    private String patientSex;
-    private String department;
-
-    public PatientVisitModelS() {
-    }
-
-    public PatientVisitModelS(PatientVisitModel pvt) {
-        setModel(pvt);
-    }
-
-    public final void setModel(PatientVisitModel pvt) {
-        pvtDate = pvt.getPvtDate();
-        patientId = pvt.getPatientId();
-        patientName = pvt.getPatientName();
-        patientAge = pvt.getPatientModel().getAge();
-        patientSex = pvt.getPatientModel().getGenderDesc();
-        String dept = pvt.getDepartment();
-        int pos = dept.indexOf(',');
-        department = dept.substring(0, pos);
-    }
-}
+//package open.dolphin.toucha.model;
+//
+//import open.dolphin.infomodel.PatientVisitModel;
+//
+///**
+// * PatientVisitModelS
+// *
+// * @author masuda, Masuda Naika
+// * @author modified Chikara Fujihira <fujihirach@sandi.co.jp>, S&I Co.,Ltd.
+// */
+//public class PatientVisitModelS {
+//
+//    private String pvtDate;
+//    private String patientId;
+//    private String patientName;
+//    private String patientAge;
+//    private String patientSex;
+//    private String department;
+//
+//    public PatientVisitModelS() {
+//    }
+//
+//    public PatientVisitModelS(PatientVisitModel pvt) {
+//        setModel(pvt);
+//    }
+//
+//    public final void setModel(PatientVisitModel pvt) {
+//        pvtDate = pvt.getPvtDate();
+//        patientId = pvt.getPatientId();
+//        patientName = pvt.getPatientName();
+//        patientAge = pvt.getPatientModel().getAge();
+//        patientSex = pvt.getPatientModel().getGenderDesc();
+//        String dept = pvt.getDepartment();
+//        int pos = dept.indexOf(',');
+//        department = dept.substring(0, pos);
+//    }
+//}

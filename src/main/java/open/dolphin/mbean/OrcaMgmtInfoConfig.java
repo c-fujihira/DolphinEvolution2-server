@@ -153,6 +153,12 @@ public class OrcaMgmtInfoConfig {
                 String splitString;
                 retString = leftB(retString, 25, "UTF-8");
                 splitString = String.valueOf(retString.charAt(16));
+                
+                //- ORCA4.7 切り替え時ブランク対応
+                if(splitString.isEmpty() || splitString.equals(" ")){
+                   splitString = "0"; 
+                }
+
                 setZanryoFlag(Integer.valueOf(splitString));
             }
 

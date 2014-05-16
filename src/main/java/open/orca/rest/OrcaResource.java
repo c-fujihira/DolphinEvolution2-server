@@ -413,15 +413,10 @@ public class OrcaResource {
         name = StringTool.toZenkakuUpperLower(name);
 
         // SQL 文
-        boolean one = name.length() == 1 ? true : false;
         StringBuilder buf = new StringBuilder();
-        if (one) {
-            buf.append(QUERY_TENSU_BY_1_NAME);
-        } else {
-            buf.append(QUERY_TENSU_BY_NAME);
-            if (!partialMatch) {
-                name = "^" + name;
-            }
+        buf.append(QUERY_TENSU_BY_NAME);
+        if (!partialMatch) {
+            name = "^" + name;
         }
         String sql = buf.toString();
 

@@ -94,7 +94,7 @@ public class DiagnosisSender {
     /**
      * CLAIM送信を行う。
      *
-     * @param sendModel 送信するDocuentModel
+     * @param wrapper 送信するDocuentModel
      * @throws Exception
      */
     public void send(DiagnosisSendWrapper wrapper) throws Exception {
@@ -107,9 +107,11 @@ public class DiagnosisSender {
         sbPath.append("custom.properties");
         File f = new File(sbPath.toString());
         FileInputStream fin = new FileInputStream(f);
-        InputStreamReader isr = new InputStreamReader(fin, "JISAutoDetect");
-        config.load(isr);
-        isr.close();
+        try (InputStreamReader isr = new InputStreamReader(fin, "JISAutoDetect")) {
+            config.load(isr);
+            isr.close();
+        } catch (IOException e) {
+        }
         String claimSend = config.getProperty("diagnosis.claim.send");
         if (claimSend != null && claimSend.equals("false")) {
             return;
@@ -127,6 +129,9 @@ public class DiagnosisSender {
         List<RegisteredDiagnosisModel> deletedDiagnosis = wrapper.getDeletedDiagnosis();
 //minagawa$        
 
+        //- 一時削除用CLAIM送信病名 
+        List<RegisteredDiagnosisModel> claimDel = wrapper.getClaimDel();
+        
         // 実際にCLAIM送信する病名
         List<RegisteredDiagnosisModel> actualList = new ArrayList<>();
 
@@ -159,6 +164,56 @@ public class DiagnosisSender {
                 }
             }
             actualList.addAll(updatedDiagnosis);
+            
+            // DocInfo & RD をカプセル化したアイテムを生成する
+            ArrayList<DiagnosisModuleItem> moduleItems = new ArrayList<>();
+            
+            //- 更新時、ORCA一時削除
+            for (RegisteredDiagnosisModel r : claimDel) {
+
+                DocInfoModel docInfo = new DocInfoModel();
+
+                docInfo.setDocId(GUIDGenerator.generate(docInfo));
+                docInfo.setTitle(IInfoModel.DEFAULT_DIAGNOSIS_TITLE);
+                docInfo.setPurpose(IInfoModel.PURPOSE_RECORD);
+                docInfo.setFirstConfirmDate(ModelUtils.getDateTimeAsObject(r.getConfirmDate()));
+                docInfo.setConfirmDate(ModelUtils.getDateTimeAsObject(r.getFirstConfirmDate()));
+
+                r.setDiagnosisCode(HAND_CODE); // ORCAから取り込んだ場合、コードに0000999を設定する
+                DiagnosisModuleItem mItem = new DiagnosisModuleItem();
+                mItem.setDocInfo(docInfo);
+                mItem.setRegisteredDiagnosisModule(r);
+                moduleItems.add(mItem);
+                
+                // ヘルパー用の値を生成する
+                String confirmDate = wrapper.getConfirmDate();
+
+                // ヘルパークラスを生成する
+                DiseaseHelper dhl = new DiseaseHelper();
+                dhl.setPatientId(wrapper.getPatientId());           // 患者ID
+                dhl.setConfirmDate(confirmDate);                    // 確定日
+                dhl.setDiagnosisModuleItems(moduleItems);           // RD+DocInfo
+                dhl.setGroupId(GUIDGenerator.generate(dhl));        // GroupId
+
+                dhl.setDepartment(wrapper.getDepartment());         // 診療科コード
+                dhl.setDepartmentDesc(wrapper.getDepartmentDesc()); // 診療科名
+                dhl.setCreatorName(wrapper.getCreatorName());       // 担当医名
+                dhl.setCreatorId(wrapper.getCreatorLicense());      // 担当医コード
+                dhl.setJmariCode(wrapper.getJamariCode());          // JMARI code
+                dhl.setCreatorLicense(wrapper.getCreatorLicense()); // 医療資格
+                dhl.setFacilityName(wrapper.getFacilityName());     // 施設名 
+                
+                // ログのために基本情報を生成する
+                StringBuilder sb = new StringBuilder();
+                sb.append(confirmDate).append(" ");
+                sb.append(wrapper.getPatientId()).append(" ");
+                sb.append(wrapper.getPatientName()).append(" ");
+                sb.append(wrapper.getPatientGender());
+                String baseInfo = sb.toString();
+                
+                //- Claim送信 一時削除
+                sendClaim(dhl, sb, baseInfo);
+            }
         }
 
 //minagawa^ LSC 1.4 傷病名の削除 2013/06/24
@@ -193,7 +248,6 @@ public class DiagnosisSender {
 //s.oh^ 2013/05/10 傷病名対応
             rd.setDiagnosisCode(HAND_CODE); // ORCAから取り込んだ場合、コードに0000999を設定する
 //s.oh$
-
             DiagnosisModuleItem mItem = new DiagnosisModuleItem();
             mItem.setDocInfo(docInfo);
             mItem.setRegisteredDiagnosisModule(rd);
@@ -218,18 +272,18 @@ public class DiagnosisSender {
         dhl.setCreatorLicense(wrapper.getCreatorLicense()); // 医療資格
         dhl.setFacilityName(wrapper.getFacilityName());     // 施設名 
 
-        if (DEBUG) {
-            debug("患者ID=" + dhl.getPatientId());
-            debug("確定日=" + dhl.getConfirmDate());
-            debug("GroupId=" + dhl.getGroupId());
-            debug("診療科コード=" + dhl.getDepartment());
-            debug("診療科名=" + dhl.getDepartmentDesc());
-            debug("担当医名=" + dhl.getCreatorName());
-            debug("担当医コード=" + dhl.getCreatorId());
-            debug("JMARI code=" + dhl.getJmariCode());
-            debug("医療資格=" + dhl.getCreatorLicense());
-            debug("施設名=" + dhl.getFacilityName());
-        }
+//        if (DEBUG) {
+//            debug("患者ID=" + dhl.getPatientId());
+//            debug("確定日=" + dhl.getConfirmDate());
+//            debug("GroupId=" + dhl.getGroupId());
+//            debug("診療科コード=" + dhl.getDepartment());
+//            debug("診療科名=" + dhl.getDepartmentDesc());
+//            debug("担当医名=" + dhl.getCreatorName());
+//            debug("担当医コード=" + dhl.getCreatorId());
+//            debug("JMARI code=" + dhl.getJmariCode());
+//            debug("医療資格=" + dhl.getCreatorLicense());
+//            debug("施設名=" + dhl.getFacilityName());
+//        }
 
         // ログのために基本情報を生成する
         StringBuilder sb = new StringBuilder();
@@ -238,7 +292,14 @@ public class DiagnosisSender {
         sb.append(wrapper.getPatientName()).append(" ");
         sb.append(wrapper.getPatientGender());
         String baseInfo = sb.toString();
+        
+        //- Claim送信 追加
+        sendClaim(dhl, sb, baseInfo);
+        
+    }
 
+    public void sendClaim(DiseaseHelper dhl, StringBuilder sb, String baseInfo) throws Exception {
+        
         // CLIAM message を生成する
         VelocityContext context = VelocityHelper.getContext();
         context.put(OBJECT_NAME, dhl);
@@ -249,44 +310,34 @@ public class DiagnosisSender {
             bw.close();
         }
         String claimMessage = sw.toString();
-//minagawa^ CLAIM Log    
         log(claimMessage);
-//        if (DEBUG) {
-//            debug(claimMessage);
-//        }
-//minagawa$        
-        //--------------------------------------------------------
 
-        // ORCAへ接続する
-        Socket socket = new Socket(host, port);
-        OutputStream out = socket.getOutputStream();
-        DataOutputStream dout = new DataOutputStream(out);
-        BufferedOutputStream writer = new BufferedOutputStream(dout);
-
-        InputStream in = socket.getInputStream();
-        DataInputStream din = new DataInputStream(in);
-        BufferedInputStream reader = new BufferedInputStream(din);
-
-        // Writes UTF8 data
-        writer.write(claimMessage.getBytes(enc));
-        writer.write(EOT);
-        writer.flush();
-
-        // Reads result
-        int c = reader.read();
-        if (c == ACK) {
-            sb = new StringBuilder();
-            sb.append(ACK_STR).append(baseInfo);
-            log(sb.toString());
-        } else if (c == NAK) {
-            sb = new StringBuilder();
-            sb.append(NAK_STR).append(baseInfo);
-            log(sb.toString());
+        try (Socket socket = new Socket(host, port)) {
+            OutputStream out = socket.getOutputStream();
+            DataOutputStream dout = new DataOutputStream(out);
+            BufferedInputStream reader;
+            try (BufferedOutputStream writer = new BufferedOutputStream(dout); InputStream in = socket.getInputStream()) {
+                DataInputStream din = new DataInputStream(in);
+                reader = new BufferedInputStream(din);
+                writer.write(claimMessage.getBytes(enc));
+                writer.write(EOT);
+                writer.flush();
+                int c = reader.read();
+                if (c == ACK) {
+                    sb = new StringBuilder();
+                    sb.append(ACK_STR).append(baseInfo);
+                    log(sb.toString());
+                } else if (c == NAK) {
+                    sb = new StringBuilder();
+                    sb.append(NAK_STR).append(baseInfo);
+                    log(sb.toString());
+                }
+                in.close();
+                writer.close();
+            }
+            reader.close();
+            socket.close();
         }
-
-        writer.close();
-        reader.close();
-        socket.close();
     }
 
 //minagawa^ CLAIM Log    

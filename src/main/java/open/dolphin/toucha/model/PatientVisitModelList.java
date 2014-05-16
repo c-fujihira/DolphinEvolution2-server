@@ -36,37 +36,37 @@
  * Public License, version 3 (GPLv3) This is free software, and you are welcome to redistribute 
  * it under certain conditions; see the GPLv3 for details.
  */
-package open.dolphin.toucha.model;
-
-import java.util.List;
-
-/**
- * PatientVisitModelList
- *
- * @author masuda, Masuda Naika
- * @author modified Chikara Fujihira <fujihirach@sandi.co.jp>, S&I Co.,Ltd.
- */
-public class PatientVisitModelList {
-
-    private String pvtDate;
-    private List<PatientVisitModelS> pvtList;
-
-    public PatientVisitModelList() {
-    }
-
-    public void setPvtDate(String pvtDate) {
-        this.pvtDate = pvtDate;
-    }
-
-    public void setPvtList(List<PatientVisitModelS> list) {
-        pvtList = list;
-    }
-
-    public String getPvtDate() {
-        return pvtDate;
-    }
-
-    public List<PatientVisitModelS> getPvtList() {
-        return pvtList;
-    }
-}
+//package open.dolphin.toucha.model;
+//
+//import java.util.List;
+//
+///**
+// * PatientVisitModelList
+// *
+// * @author masuda, Masuda Naika
+// * @author modified Chikara Fujihira <fujihirach@sandi.co.jp>, S&I Co.,Ltd.
+// */
+//public class PatientVisitModelList {
+//
+//    private String pvtDate;
+//    private List<PatientVisitModelS> pvtList;
+//
+//    public PatientVisitModelList() {
+//    }
+//
+//    public void setPvtDate(String pvtDate) {
+//        this.pvtDate = pvtDate;
+//    }
+//
+//    public void setPvtList(List<PatientVisitModelS> list) {
+//        pvtList = list;
+//    }
+//
+//    public String getPvtDate() {
+//        return pvtDate;
+//    }
+//
+//    public List<PatientVisitModelS> getPvtList() {
+//        return pvtList;
+//    }
+//}

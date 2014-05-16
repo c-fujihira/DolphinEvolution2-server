@@ -78,6 +78,7 @@ public class KarteServiceBean {
     private static final String QUERY_PATIENT_MEMO = "from PatientMemoModel p where p.karte.id=:karteId";
 
     private static final String QUERY_DOCUMENT_INCLUDE_MODIFIED = "from DocumentModel d where d.karte.id=:karteId and d.started >= :fromDate and d.status !='D'";
+    private static final String QUERY_DOCUMENT_INCLUDE_MODIFIED_SORT = "from DocumentModel d where d.karte.id=:karteId and d.started >= :fromDate and d.status !='D' order by d.started, d.confirmed";
     private static final String QUERY_DOCUMENT = "from DocumentModel d where d.karte.id=:karteId and d.started >= :fromDate and (d.status='F' or d.status='T')";
     private static final String QUERY_DOCUMENT_BY_LINK_ID = "from DocumentModel d where d.linkId=:id";
 
@@ -150,7 +151,7 @@ public class KarteServiceBean {
                     .setParameter(KARTE_ID, karteId)
                     .getResultList();
             if (!list1.isEmpty()) {
-                List<AllergyModel> allergies = new ArrayList<AllergyModel>(list1.size());
+                List<AllergyModel> allergies = new ArrayList<>(list1.size());
                 for (ObservationModel observation : list1) {
                     AllergyModel allergy = new AllergyModel();
                     allergy.setObservationId(observation.getId());
@@ -169,7 +170,7 @@ public class KarteServiceBean {
                     .setParameter(KARTE_ID, karteId)
                     .getResultList();
             if (!list2.isEmpty()) {
-                List<PhysicalModel> physicals = new ArrayList<PhysicalModel>(list2.size());
+                List<PhysicalModel> physicals = new ArrayList<>(list2.size());
                 for (ObservationModel observation : list2) {
                     PhysicalModel physical = new PhysicalModel();
                     physical.setHeightId(observation.getId());
@@ -187,7 +188,7 @@ public class KarteServiceBean {
                     .setParameter(KARTE_ID, karteId)
                     .getResultList();
             if (!list3.isEmpty()) {
-                List<PhysicalModel> physicals = new ArrayList<PhysicalModel>(list3.size());
+                List<PhysicalModel> physicals = new ArrayList<>(list3.size());
                 for (ObservationModel observation : list3) {
                     PhysicalModel physical = new PhysicalModel();
                     physical.setWeightId(observation.getId());
@@ -207,7 +208,7 @@ public class KarteServiceBean {
                     .getResultList();
 
             if (!latestVisits.isEmpty()) {
-                List<String> visits = new ArrayList<String>(latestVisits.size());
+                List<String> visits = new ArrayList<>(latestVisits.size());
                 for (PatientVisitModel bean : latestVisits) {
                     // 2012-07-23
                     // cancelしている場合は返さない
@@ -225,7 +226,7 @@ public class KarteServiceBean {
                     .getResultList();
 
             if (!documents.isEmpty()) {
-                List<DocInfoModel> c = new ArrayList<DocInfoModel>(documents.size());
+                List<DocInfoModel> c = new ArrayList<>(documents.size());
                 for (DocumentModel docBean : documents) {
                     docBean.toDetuch();
                     c.add(docBean.getDocInfoModel());
@@ -265,7 +266,7 @@ public class KarteServiceBean {
     /**
      * カルテの基礎的な情報をまとめて返す。
      *
-     * @param patientPk 患者の Database Primary Key
+     * @param patientPK 患者の Database Primary Key
      * @param fromDate 各種エントリの検索開始日
      * @return 基礎的な情報をフェッチした KarteBean
      */
@@ -287,7 +288,7 @@ public class KarteServiceBean {
                     .setParameter(KARTE_ID, karteId)
                     .getResultList();
             if (!list1.isEmpty()) {
-                List<AllergyModel> allergies = new ArrayList<AllergyModel>(list1.size());
+                List<AllergyModel> allergies = new ArrayList<>(list1.size());
                 for (ObservationModel observation : list1) {
                     AllergyModel allergy = new AllergyModel();
                     allergy.setObservationId(observation.getId());
@@ -306,7 +307,7 @@ public class KarteServiceBean {
                     .setParameter(KARTE_ID, karteId)
                     .getResultList();
             if (!list2.isEmpty()) {
-                List<PhysicalModel> physicals = new ArrayList<PhysicalModel>(list2.size());
+                List<PhysicalModel> physicals = new ArrayList<>(list2.size());
                 for (ObservationModel observation : list2) {
                     PhysicalModel physical = new PhysicalModel();
                     physical.setHeightId(observation.getId());
@@ -324,7 +325,7 @@ public class KarteServiceBean {
                     .setParameter(KARTE_ID, karteId)
                     .getResultList();
             if (!list3.isEmpty()) {
-                List<PhysicalModel> physicals = new ArrayList<PhysicalModel>(list3.size());
+                List<PhysicalModel> physicals = new ArrayList<>(list3.size());
                 for (ObservationModel observation : list3) {
                     PhysicalModel physical = new PhysicalModel();
                     physical.setWeightId(observation.getId());
@@ -344,7 +345,7 @@ public class KarteServiceBean {
                     .getResultList();
 
             if (!latestVisits.isEmpty()) {
-                List<String> visits = new ArrayList<String>(latestVisits.size());
+                List<String> visits = new ArrayList<>(latestVisits.size());
                 for (PatientVisitModel bean : latestVisits) {
                     // 来院日のみを使用する
                     visits.add(bean.getPvtDate());
@@ -360,7 +361,7 @@ public class KarteServiceBean {
                     .getResultList();
 
             if (!documents.isEmpty()) {
-                List<DocInfoModel> c = new ArrayList<DocInfoModel>(documents.size());
+                List<DocInfoModel> c = new ArrayList<>(documents.size());
                 for (DocumentModel docBean : documents) {
                     docBean.toDetuch();
                     c.add(docBean.getDocInfoModel());
@@ -401,7 +402,7 @@ public class KarteServiceBean {
      *
      * @param karteId カルテId
      * @param fromDate 取得開始日
-     * @param status ステータス
+     * @param includeModifid status ステータス
      * @return DocInfo のコレクション
      */
     public List<DocInfoModel> getDocumentList(long karteId, Date fromDate, boolean includeModifid) {
@@ -420,7 +421,7 @@ public class KarteServiceBean {
                     .getResultList();
         }
 
-        List<DocInfoModel> result = new ArrayList<DocInfoModel>();
+        List<DocInfoModel> result = new ArrayList<>();
         for (DocumentModel doc : documents) {
             // モデルからDocInfo へ必要なデータを移す
             // クライアントが DocInfo だけを利用するケースがあるため
@@ -438,7 +439,7 @@ public class KarteServiceBean {
      */
     public List<DocumentModel> getDocuments(List<Long> ids) {
 
-        List<DocumentModel> ret = new ArrayList<DocumentModel>(3);
+        List<DocumentModel> ret = new ArrayList<>(3);
 
         // ループする
         for (Long id : ids) {
@@ -481,7 +482,6 @@ public class KarteServiceBean {
     /**
      * ドキュメント DocumentModel オブジェクトを保存する。
      *
-     * @param karteId カルテId
      * @param document 追加するDocumentModel オブジェクト
      * @return 追加した数
      */
@@ -668,7 +668,7 @@ public class KarteServiceBean {
     /**
      * ドキュメントを論理削除する。
      *
-     * @param pk 論理削除するドキュメントの primary key
+     * @param id 論理削除するドキュメントの primary key
      * @return 削除したドキュメントの文書IDリスト
      */
     public List<String> deleteDocument(long id) {
@@ -690,7 +690,7 @@ public class KarteServiceBean {
         int cnt = 0;
 
         // 削除リスト　文書ID
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
 
         // Loop で削除
         while (true) {
@@ -757,6 +757,7 @@ public class KarteServiceBean {
      * ドキュメントのタイトルを変更する。
      *
      * @param pk 変更するドキュメントの primary key
+     * @param title
      * @return 変更した件数
      */
     public int updateTitle(long pk, String title) {
@@ -768,14 +769,17 @@ public class KarteServiceBean {
     /**
      * ModuleModelエントリを取得する。
      *
-     * @param spec モジュール検索仕様
+     * @param karteId
+     * @param entity
+     * @param toDate
+     * @param fromDate
      * @return ModuleModelリストのリスト
      */
     public List<List<ModuleModel>> getModules(long karteId, String entity, List fromDate, List toDate) {
 
         // 抽出期間は別けられている
         int len = fromDate.size();
-        List<List<ModuleModel>> ret = new ArrayList<List<ModuleModel>>(len);
+        List<List<ModuleModel>> ret = new ArrayList<>(len);
 
         // 抽出期間セットの数だけ繰り返す
         for (int i = 0; i < len; i++) {
@@ -806,7 +810,7 @@ public class KarteServiceBean {
 
         // 抽出期間は別けられている
         int len = fromDate.size();
-        List<List> ret = new ArrayList<List>(len);
+        List<List> ret = new ArrayList<>(len);
 
         // 抽出期間セットの数だけ繰り返す
         for (int i = 0; i < len; i++) {
@@ -855,7 +859,9 @@ public class KarteServiceBean {
     /**
      * 傷病名リストを取得する。
      *
-     * @param spec 検索仕様
+     * @param karteId
+     * @param activeOnly
+     * @param fromDate
      * @return 傷病名のリスト
      */
     public List<RegisteredDiagnosisModel> getDiagnosis(long karteId, Date fromDate, boolean activeOnly) {
@@ -889,8 +895,6 @@ public class KarteServiceBean {
     public List<Long> postPutSendDiagnosis(DiagnosisSendWrapper wrapper) {
 
 //minagawa^ LSC 1.4 傷病名の削除 2013/06/24
-        int cnt = 0;
-
         // 削除
         if (wrapper.getDeletedDiagnosis() != null) {
 
@@ -901,7 +905,6 @@ public class KarteServiceBean {
                 if (bean.getId() != 0L) {
                     RegisteredDiagnosisModel delete = (RegisteredDiagnosisModel) em.find(RegisteredDiagnosisModel.class, bean.getId());
                     em.remove(delete);
-                    cnt++;
                 }
             }
         }
@@ -910,17 +913,15 @@ public class KarteServiceBean {
         // 更新
         if (wrapper.getUpdatedDiagnosis() != null) {
 
-            ///int cnt = 0;
             List<RegisteredDiagnosisModel> updateList = wrapper.getUpdatedDiagnosis();
 
             for (RegisteredDiagnosisModel bean : updateList) {
                 em.merge(bean);
-                cnt++;
             }
         }
-
+        
         // 永続化
-        List<Long> ret = new ArrayList<Long>(3);
+        List<Long> ret = new ArrayList<>(3);
         if (wrapper.getAddedDiagnosis() != null) {
 
             List<RegisteredDiagnosisModel> addList = wrapper.getAddedDiagnosis();
@@ -970,7 +971,7 @@ public class KarteServiceBean {
      */
     public List<Long> addDiagnosis(List<RegisteredDiagnosisModel> addList) {
 
-        List<Long> ret = new ArrayList<Long>(addList.size());
+        List<Long> ret = new ArrayList<>(addList.size());
 
         for (RegisteredDiagnosisModel bean : addList) {
             em.persist(bean);
@@ -1020,7 +1021,10 @@ public class KarteServiceBean {
     /**
      * Observationを取得する。
      *
-     * @param spec 検索仕様
+     * @param karteId
+     * @param observation
+     * @param phenomenon
+     * @param firstConfirmed
      * @return Observationのリスト
      */
     public List<ObservationModel> getObservations(long karteId, String observation, String phenomenon, Date firstConfirmed) {
@@ -1068,7 +1072,7 @@ public class KarteServiceBean {
 
         if (observations != null && observations.size() > 0) {
 
-            List<Long> ret = new ArrayList<Long>(observations.size());
+            List<Long> ret = new ArrayList<>(observations.size());
 
             for (ObservationModel model : observations) {
                 em.persist(model);
@@ -1122,6 +1126,7 @@ public class KarteServiceBean {
      * 患者メモを更新する。
      *
      * @param memo 更新するメモ
+     * @return count
      */
     public int updatePatientMemo(PatientMemoModel memo) {
 
@@ -1138,7 +1143,10 @@ public class KarteServiceBean {
 
     //--------------------------------------------------------------------------
     /**
-     * 紹介状を保存または更新する。
+     * 紹介状を保存または更新する
+     *
+     * @param model
+     * @return id
      */
     public long saveOrUpdateLetter(LetterModel model) {
         LetterModel saveOrUpdate = em.merge(model);
@@ -1146,23 +1154,29 @@ public class KarteServiceBean {
     }
 
     /**
-     * 紹介状のリストを取得する。
+     * 紹介状のリストを取得する
+     *
+     * @param karteId
+     * @param docType
+     * @return
      */
     public List<LetterModel> getLetterList(long karteId, String docType) {
+        switch (docType) {
+            case TOUTOU: {
+                // 紹介状
+                List<LetterModel> ret = (List<LetterModel>) em.createQuery(QUERY_LETTER_BY_KARTE_ID)
+                        .setParameter(KARTE_ID, karteId)
+                        .getResultList();
+                return ret;
 
-        if (docType.equals(TOUTOU)) {
-            // 紹介状
-            List<LetterModel> ret = (List<LetterModel>) em.createQuery(QUERY_LETTER_BY_KARTE_ID)
-                    .setParameter(KARTE_ID, karteId)
-                    .getResultList();
-            return ret;
-
-        } else if (docType.equals(TOUTOU_REPLY)) {
-            // 返書
-            List<LetterModel> ret = (List<LetterModel>) em.createQuery(QUERY_REPLY_BY_KARTE_ID)
-                    .setParameter(KARTE_ID, karteId)
-                    .getResultList();
-            return ret;
+            }
+            case TOUTOU_REPLY: {
+                // 返書
+                List<LetterModel> ret = (List<LetterModel>) em.createQuery(QUERY_REPLY_BY_KARTE_ID)
+                        .setParameter(KARTE_ID, karteId)
+                        .getResultList();
+                return ret;
+            }
         }
 
         return null;
@@ -1170,6 +1184,9 @@ public class KarteServiceBean {
 
     /**
      * 紹介状を取得する。
+     *
+     * @param letterPk
+     * @return LetterModel
      */
     public LetterModel getLetter(long letterPk) {
 
@@ -1192,7 +1209,7 @@ public class KarteServiceBean {
 
         // 抽出期間は別けられている
         int len = fromDate.size();
-        List<List<AppointmentModel>> ret = new ArrayList<List<AppointmentModel>>(len);
+        List<List<AppointmentModel>> ret = new ArrayList<>(len);
 
         // 抽出期間セットの数だけ繰り返す
         for (int i = 0; i < len; i++) {

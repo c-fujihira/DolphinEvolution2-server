@@ -73,4 +73,9 @@ public final class BlockWrapper extends HttpServletRequestWrapper {
         String ret = getRequestURI();
         return ret.substring(22);
     }
+    
+    public String getClientVersion() {
+        return super.getHeader("clientVersion");
+    }
+    
 }

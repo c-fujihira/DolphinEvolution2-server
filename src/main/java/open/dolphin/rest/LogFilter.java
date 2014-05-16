@@ -123,7 +123,9 @@ public class LogFilter implements Filter {
         StringBuilder sb = new StringBuilder();
         sb.append(wrapper.getRemoteAddr()).append(" ");
         sb.append(wrapper.getShortUser()).append(" ");
+        sb.append(wrapper.getClientVersion()).append(" ");
         sb.append(wrapper.getMethod()).append(" ");
+        
 //minagawa^ VisitTouch logを分ける        
         String uri = wrapper.getRequestURIForLog();
         sb.append(uri);

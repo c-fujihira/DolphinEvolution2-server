@@ -29,8 +29,7 @@
                 open.dolphin.touch.DolphinResourceASP,
                 open.dolphin.touch.DemoResourceASP,
                 open.orca.rest.OrcaResource,
-                open.dolphin.touch.EHTResource,
-                open.dolphin.rest.TouchaResource
+                open.dolphin.touch.EHTResource
         </param-value>
     </context-param>
     <context-param>
