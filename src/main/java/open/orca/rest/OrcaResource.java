@@ -99,37 +99,55 @@ public class OrcaResource {
 
     private static boolean RP_OUT = true;
 
+    //- グループ診療対応としてhospNum1固定
     private static final String QUERY_FACILITYID_BY_1001
-            = "select kanritbl from tbl_syskanri where kanricd='1001'";
+    //        = "select kanritbl from tbl_syskanri where kanricd='1001'";
+            = "select kanritbl from tbl_syskanri where kanricd='1001' and hospNum='1'";
 
+    //- グループ診療対応としてhospNum1固定
     private static final String QUERY_TENSU_BY_SHINKU
-            = "select srycd,name,kananame,tensikibetu,ten,nyugaitekkbn,routekkbn,srysyukbn,hospsrykbn,yukostymd,yukoedymd from tbl_tensu where srysyukbn ~ ? and yukostymd<= ? and yukoedymd>=?";
+    //        = "select srycd,name,kananame,tensikibetu,ten,nyugaitekkbn,routekkbn,srysyukbn,hospsrykbn,yukostymd,yukoedymd from tbl_tensu where srysyukbn ~ ? and yukostymd<= ? and yukoedymd>=?";
+            = "select srycd,name,kananame,tensikibetu,ten,nyugaitekkbn,routekkbn,srysyukbn,hospsrykbn,yukostymd,yukoedymd from tbl_tensu where srysyukbn ~ ? and yukostymd<= ? and yukoedymd>=? and hospNum='1'";
 
+    //- グループ診療対応としてhospNum1固定
     private static final String QUERY_TENSU_BY_NAME
-            = "select srycd,name,kananame,taniname,tensikibetu,ten,nyugaitekkbn,routekkbn,srysyukbn,hospsrykbn,ykzkbn,yakkakjncd,yukostymd,yukoedymd from tbl_tensu where (name ~ ? or kananame ~ ?) and yukostymd<= ? and yukoedymd>=?";
+    //        = "select srycd,name,kananame,taniname,tensikibetu,ten,nyugaitekkbn,routekkbn,srysyukbn,hospsrykbn,ykzkbn,yakkakjncd,yukostymd,yukoedymd from tbl_tensu where (name ~ ? or kananame ~ ?) and yukostymd<= ? and yukoedymd>=?";
+            = "select srycd,name,kananame,taniname,tensikibetu,ten,nyugaitekkbn,routekkbn,srysyukbn,hospsrykbn,ykzkbn,yakkakjncd,yukostymd,yukoedymd from tbl_tensu where (name ~ ? or kananame ~ ?) and yukostymd<= ? and yukoedymd>=? and hospNum='1'";
 
+    //- グループ診療対応としてhospNum1固定
     private static final String QUERY_TENSU_BY_1_NAME
-            = "select srycd,name,kananame,taniname,tensikibetu,ten,nyugaitekkbn,routekkbn,srysyukbn,hospsrykbn,ykzkbn,yakkakjncd,yukostymd,yukoedymd from tbl_tensu where (name = ? or kananame = ?) and yukostymd<= ? and yukoedymd>=?";
+    //        = "select srycd,name,kananame,taniname,tensikibetu,ten,nyugaitekkbn,routekkbn,srysyukbn,hospsrykbn,ykzkbn,yakkakjncd,yukostymd,yukoedymd from tbl_tensu where (name = ? or kananame = ?) and yukostymd<= ? and yukoedymd>=?";
+             = "select srycd,name,kananame,taniname,tensikibetu,ten,nyugaitekkbn,routekkbn,srysyukbn,hospsrykbn,ykzkbn,yakkakjncd,yukostymd,yukoedymd from tbl_tensu where (name = ? or kananame = ?) and yukostymd<= ? and yukoedymd>=? and hospNum='1'";
 
+    //- グループ診療対応としてhospNum1固定
     private static final String QUERY_TENSU_BY_CODE
-            = "select srycd,name,kananame,taniname,tensikibetu,ten,nyugaitekkbn,routekkbn,srysyukbn,hospsrykbn,ykzkbn,yakkakjncd,yukostymd,yukoedymd from tbl_tensu where srycd ~ ? and yukostymd<= ? and yukoedymd>=?";
-
+    //        = "select srycd,name,kananame,taniname,tensikibetu,ten,nyugaitekkbn,routekkbn,srysyukbn,hospsrykbn,ykzkbn,yakkakjncd,yukostymd,yukoedymd from tbl_tensu where srycd ~ ? and yukostymd<= ? and yukoedymd>=?";
+            = "select srycd,name,kananame,taniname,tensikibetu,ten,nyugaitekkbn,routekkbn,srysyukbn,hospsrykbn,ykzkbn,yakkakjncd,yukostymd,yukoedymd from tbl_tensu where srycd ~ ? and yukostymd<= ? and yukoedymd>=? and hospNum='1'";
+    
+    //- グループ診療対応としてhospNum1固定
     private static final String QUERY_TENSU_BY_TEN
-            = "select srycd,name,kananame,taniname,tensikibetu,ten,nyugaitekkbn,routekkbn,srysyukbn,hospsrykbn,ykzkbn,yakkakjncd,yukostymd,yukoedymd from tbl_tensu where ten >= ? and ten <= ? and yukostymd<= ? and yukoedymd>=?";
+    //        = "select srycd,name,kananame,taniname,tensikibetu,ten,nyugaitekkbn,routekkbn,srysyukbn,hospsrykbn,ykzkbn,yakkakjncd,yukostymd,yukoedymd from tbl_tensu where ten >= ? and ten <= ? and yukostymd<= ? and yukoedymd>=?";
+            = "select srycd,name,kananame,taniname,tensikibetu,ten,nyugaitekkbn,routekkbn,srysyukbn,hospsrykbn,ykzkbn,yakkakjncd,yukostymd,yukoedymd from tbl_tensu where ten >= ? and ten <= ? and yukostymd<= ? and yukoedymd>=? and hospNum='1'";
 
+    //- グループ診療対応としてhospNum1固定
     private static final String QUERY_TENSU_BY_TEN2
-            = "select srycd,name,kananame,taniname,tensikibetu,ten,nyugaitekkbn,routekkbn,srysyukbn,hospsrykbn,ykzkbn,yakkakjncd,yukostymd,yukoedymd from tbl_tensu where ten = ? and yukostymd<= ? and yukoedymd>=?";
+    //        = "select srycd,name,kananame,taniname,tensikibetu,ten,nyugaitekkbn,routekkbn,srysyukbn,hospsrykbn,ykzkbn,yakkakjncd,yukostymd,yukoedymd from tbl_tensu where ten = ? and yukostymd<= ? and yukoedymd>=?";
+            = "select srycd,name,kananame,taniname,tensikibetu,ten,nyugaitekkbn,routekkbn,srysyukbn,hospsrykbn,ykzkbn,yakkakjncd,yukostymd,yukoedymd from tbl_tensu where ten = ? and yukostymd<= ? and yukoedymd>=? and hospNum='1'";
 
+    //- グループ診療対応としてhospNum1固定
     private static final String QUERY_GENERAL_NAME_BY_CODE
-            = "select b.srycd,genericname from tbl_tensu b,tbl_genericname c where b.srycd=? and substring(b.yakkakjncd from 1 for 9)=c.yakkakjncd order by b.yukoedymd desc";
+    //        = "select b.srycd,genericname from tbl_tensu b,tbl_genericname c where b.srycd=? and substring(b.yakkakjncd from 1 for 9)=c.yakkakjncd order by b.yukoedymd desc";
+            = "select b.srycd,genericname from tbl_tensu b,tbl_genericname c where b.srycd=? and substring(b.yakkakjncd from 1 for 9)=c.yakkakjncd and b.hospNum='1' order by b.yukoedymd desc";
 
 //    private static final String QUERY_DICEASE_BY_NAME
 //            = "select byomeicd, byomei, byomeikana, icd10, haisiymd from tbl_byomei where (byomei ~ ? or byomeikana ~?) and haisiymd >= ?";
     private static final String QUERY_DICEASE_BY_NAME_46
             = "select byomeicd, byomei, byomeikana, icd10_1, haisiymd from tbl_byomei where (byomei ~ ? or byomeikana ~?) and haisiymd >= ?";
 
+    //- グループ診療対応としてhospNum1固定
     private static final String QUERY_PTID_BY_HOSPNUM_PTNUM
-            = "select ptid, ptnum from tbl_ptnum where hospnum=? and ptnum=?";
+    //        = "select ptid, ptnum from tbl_ptnum where hospnum=? and ptnum=?";
+            = "select ptid, ptnum from tbl_ptnum where hospnum=? and ptnum=? and hospNum='1'";
 
 //masuda^    
     private static final String SELECT_TBL_PTBYOMEI
@@ -226,7 +244,7 @@ public class OrcaResource {
             log("ORCA 病院番号=" + HOSP_NUM);
             log("ORCA Version=" + DB_VERSION);
 
-        } catch (Exception e) {
+        } catch (IOException | SQLException e) {
             e.printStackTrace(System.err);
 
         } finally {
@@ -335,7 +353,7 @@ public class OrcaResource {
         //System.err.println(shinku);
 
         // 結果を格納するリスト
-        ArrayList<TensuMaster> list = new ArrayList<TensuMaster>();
+        ArrayList<TensuMaster> list = new ArrayList<>();
 
         // SQL 文
         StringBuilder buf = new StringBuilder();
@@ -407,7 +425,7 @@ public class OrcaResource {
         boolean partialMatch = Boolean.parseBoolean(params[2]);
 
         // 結果を格納するリスト
-        ArrayList<TensuMaster> list = new ArrayList<TensuMaster>();
+        ArrayList<TensuMaster> list = new ArrayList<>();
 
         // 半角英数字を全角へ変換する
         name = StringTool.toZenkakuUpperLower(name);
@@ -488,7 +506,7 @@ public class OrcaResource {
         String now = params[1];
 
         // 結果を格納するリスト
-        ArrayList<TensuMaster> list = new ArrayList<TensuMaster>();
+        ArrayList<TensuMaster> list = new ArrayList<>();
 
         // SQL 文
         StringBuilder buf = new StringBuilder();
@@ -563,7 +581,7 @@ public class OrcaResource {
         String now = params[1];
 
         // 結果を格納するリスト
-        ArrayList<TensuMaster> list = new ArrayList<TensuMaster>();
+        ArrayList<TensuMaster> list = new ArrayList<>();
 
         // SQL 文
         int type;
@@ -632,7 +650,7 @@ public class OrcaResource {
             // JSON
             return conv;
 
-        } catch (Exception e) {
+        } catch (SQLException | NumberFormatException e) {
             processError(e);
 
         } finally {
@@ -654,7 +672,7 @@ public class OrcaResource {
         boolean partialMatch = Boolean.parseBoolean(params[2]);
 
         // 結果を格納するリスト
-        ArrayList<DiseaseEntry> list = new ArrayList<DiseaseEntry>();
+        ArrayList<DiseaseEntry> list = new ArrayList<>();
 
         // 戻り値
         String retXml = null;
@@ -766,7 +784,7 @@ public class OrcaResource {
         InteractionCodeList input = mapper.readValue(json, InteractionCodeList.class);
 
         // 相互作用モデルのリスト
-        List<DrugInteractionModel> ret = new ArrayList<DrugInteractionModel>();
+        List<DrugInteractionModel> ret = new ArrayList<>();
 
         // JSON のための wrapper list
         DrugInteractionList iList = new DrugInteractionList();
@@ -881,14 +899,48 @@ public class OrcaResource {
         ArrayList<OrcaInputCd> collection;
         Statement st = null;
 
+        //- 有効期限処理
+        Date date = new Date();
+        SimpleDateFormat searchDate = new SimpleDateFormat("yyyyMMdd");
+        
         StringBuilder sb = new StringBuilder();
-        sb.append("select * from tbl_inputcd where ");
-        if (true) {
-            sb.append("hospnum=");
-            sb.append(HOSP_NUM);
-            sb.append(" and ");
-        }
-        sb.append("inputcd like 'P%' or inputcd like 'S%' order by inputcd");
+        //sb.append("select * from tbl_inputcd where ");
+        sb.append("select ");
+        sb.append("cd.cdsyu   as cdsyu,   ");
+        sb.append("cd.inputcd as inputcd, ");        
+        sb.append("cd.srykbn  as srykbn,  ");
+        sb.append("cd.srycd   as srycd,   ");
+        sb.append("cd.dspseq  as dspseq,  ");
+        sb.append("cd.dspname as dspname, ");
+        sb.append("cd.termid  as termid,  ");
+        sb.append("cd.opid    as opid,    ");
+        sb.append("cd.creymd  as creymd,  ");
+        sb.append("cd.upymd   as upymd,   ");
+        sb.append("cd.uphms   as uphms,   ");
+        sb.append("cd.hospnum as hospnum  ");
+        sb.append(" from tbl_inputcd cd   ");
+        sb.append("INNER JOIN tbl_inputset se ON ");
+        sb.append("cd.inputcd = se.setcd  ");
+        sb.append("and ");
+        sb.append("se.setseq='1' ");
+        sb.append("and ");
+        sb.append("se.yukoedymd >='").append(searchDate.format(date)).append("'");
+        sb.append("and ");
+        sb.append("se.yukostymd <='").append(searchDate.format(date)).append("'");
+        sb.append("and ");
+        sb.append("cd.hospnum=").append(HOSP_NUM);
+        sb.append("and ");
+        sb.append("se.hospnum=").append(HOSP_NUM);
+        sb.append("and ");
+        sb.append("cd.inputcd like 'P%' or cd.inputcd like 'S%' ");
+        sb.append("order by cd.inputcd ");
+        
+//        if (true) {
+//            sb.append("hospnum=");
+//            sb.append(HOSP_NUM);
+//            sb.append(" and ");
+//        }
+//        sb.append("inputcd like 'P%' or inputcd like 'S%' order by inputcd");
 
         String sql = sb.toString();
         debug(sql);
@@ -899,7 +951,7 @@ public class OrcaResource {
             con = getConnection();
             st = con.createStatement();
             ResultSet rs = st.executeQuery(sql);
-            collection = new ArrayList<OrcaInputCd>();
+            collection = new ArrayList<>();
 
             while (rs.next()) {
 
@@ -994,7 +1046,7 @@ public class OrcaResource {
     /**
      * 指定された入力セットコードから診療セットを Stamp にして返す。
      *
-     * @param inputSetInfo 入力セットの StampInfo
+     * @param param
      * @return 入力セットのStampリスト
      */
     @GET
@@ -1020,26 +1072,37 @@ public class OrcaResource {
         String sql1;
         String sql2;
 
+        //- 有効期限処理
+        Date date = new Date();
+        SimpleDateFormat searchDate = new SimpleDateFormat("yyyyMMdd");
+                
         StringBuilder sb1 = new StringBuilder();
         if (true) {
-            sb1.append("select inputcd,suryo1,kaisu from tbl_inputset where hospnum=? and setcd=? order by setseq");
+            //- 有効期限処理
+            //sb1.append("select inputcd,suryo1,kaisu from tbl_inputset where hospnum=? and setcd=? order by setseq");
+            sb1.append("select inputcd,suryo1,kaisu from tbl_inputset where hospnum=? and setcd=? and yukoedymd >=? and yukostymd <=? order by setseq");
             sql1 = sb1.toString();
         } else {
-            sb1.append("select inputcd,suryo1,kaisu from tbl_inputset where setcd=? order by setseq");
+            //- 有効期限処理
+            //sb1.append("select inputcd,suryo1,kaisu from tbl_inputset where setcd=? order by setseq");
+            sb1.append("select inputcd,suryo1,kaisu from tbl_inputset where setcd=? and yukoedymd >=? and yukostymd <=? order by setseq");
             sql1 = sb1.toString();
         }
 
         // order by yukoedymd desc を追加 ^
         StringBuilder sb2 = new StringBuilder();
         if (true) {
-            sb2.append("select srysyukbn,name,taniname,ykzkbn from tbl_tensu where hospnum=? and srycd=? order by yukoedymd desc");
+            //- 有効期限処理
+            //sb2.append("select srysyukbn,name,taniname,ykzkbn from tbl_tensu where hospnum=? and srycd=? order by yukoedymd desc");
+            sb2.append("select srysyukbn,name,taniname,ykzkbn from tbl_tensu where hospnum=? and srycd=? and yukoedymd >=? and yukostymd <=? order by yukoedymd desc");
             sql2 = sb2.toString();
         } else {
-            sb2.append("select srysyukbn,name,taniname,ykzkbn from tbl_tensu where srycd=? order by yukoedymd desc");
+            //sb2.append("select srysyukbn,name,taniname,ykzkbn from tbl_tensu where srycd=? order by yukoedymd desc");
+            sb2.append("select srysyukbn,name,taniname,ykzkbn from tbl_tensu where srycd=? and yukoedymd >=? and yukostymd <=? order by yukoedymd desc");
             sql2 = sb2.toString();
         }
 
-        ArrayList<ModuleModel> retSet = new ArrayList<ModuleModel>();
+        ArrayList<ModuleModel> retSet = new ArrayList<>();
 
         try {
             //
@@ -1050,14 +1113,18 @@ public class OrcaResource {
             if (hospnum > 0) {
                 ps1.setInt(1, hospnum);
                 ps1.setString(2, setCd);
+                ps1.setString(3, searchDate.format(date));
+                ps1.setString(4, searchDate.format(date));
             } else {
                 ps1.setString(1, setCd);
+                ps1.setString(2, searchDate.format(date));
+                ps1.setString(3, searchDate.format(date));
             }
             debug(ps1.toString());
 
             ResultSet rs = ps1.executeQuery();
 
-            ArrayList<OrcaInputSet> list = new ArrayList<OrcaInputSet>();
+            ArrayList<OrcaInputSet> list = new ArrayList<>();
 
             while (rs.next()) {
 
@@ -1121,8 +1188,12 @@ public class OrcaResource {
                         if (hospnum > 0) {
                             ps2.setInt(1, hospnum);
                             ps2.setString(2, inputcd);
+                            ps2.setString(3, searchDate.format(date));
+                            ps2.setString(4, searchDate.format(date));
                         } else {
                             ps2.setString(1, inputcd);
+                            ps2.setString(2, searchDate.format(date));
+                            ps2.setString(4, searchDate.format(date));
                         }
                         debug(ps2.toString());
 
@@ -1420,7 +1491,8 @@ public class OrcaResource {
     /**
      * ORCA に登録してある病名を検索する。
      *
-     * @return RegisteredDiagnosisModelのリスト
+     * @param param
+     * @return Regi
      */
 //minagawa^ masuda先生の修飾語を含めたコードを取得    
     @GET
@@ -1513,7 +1585,7 @@ public class OrcaResource {
                 pt.setString(4, "1");
             }
             ResultSet rs = pt.executeQuery();
-            collection = new ArrayList<RegisteredDiagnosisModel>();
+            collection = new ArrayList<>();
 
             while (rs.next()) {
 
@@ -1560,7 +1632,7 @@ public class OrcaResource {
 
             return conv;
 
-        } catch (Exception e) {
+        } catch (SQLException | NumberFormatException e) {
             warn(e.getMessage());
             processError(e);
             closeConnection(con);
@@ -1573,6 +1645,7 @@ public class OrcaResource {
     /**
      * ORCA に登録してある直近の病名を検索する。
      *
+     * @param param
      * @return RegisteredDiagnosisModelのリスト
      */
     @GET
@@ -1650,7 +1723,7 @@ public class OrcaResource {
                 pt.setString(3, "1");
             }
             ResultSet rs = pt.executeQuery();
-            collection = new ArrayList<RegisteredDiagnosisModel>();
+            collection = new ArrayList<>();
 
             while (rs.next()) {
 
@@ -1697,7 +1770,7 @@ public class OrcaResource {
 
             return conv;
 
-        } catch (Exception e) {
+        } catch (SQLException | NumberFormatException e) {
             warn(e.getMessage());
             processError(e);
             closeConnection(con);
@@ -1710,20 +1783,19 @@ public class OrcaResource {
     // ORCA カテゴリ
     private void storeSuspectedDiagnosis(RegisteredDiagnosisModel rdm, String test) {
         if (test != null) {
-            if (test.equals("1")) {
-                rdm.setCategory("suspectedDiagnosis");
-                rdm.setCategoryDesc("疑い病名");
-                rdm.setCategoryCodeSys("MML0015");
-
-            } else if (test.equals("2")) {
-//                rdm.setCategory("suspectedDiagnosis");
-//                rdm.setCategoryDesc("急性");
-//                rdm.setCategoryCodeSys("MML0012");
-
-            } else if (test.equals("3")) {
-                rdm.setCategory("suspectedDiagnosis");
-                rdm.setCategoryDesc("疑い病名");
-                rdm.setCategoryCodeSys("MML0015");
+            switch (test) {
+                case "1":
+                    rdm.setCategory("suspectedDiagnosis");
+                    rdm.setCategoryDesc("疑い病名");
+                    rdm.setCategoryCodeSys("MML0015");
+                    break;
+                case "2":
+                    break;
+                case "3":
+                    rdm.setCategory("suspectedDiagnosis");
+                    rdm.setCategoryDesc("疑い病名");
+                    rdm.setCategoryCodeSys("MML0015");
+                    break;
             }
         }
     }
@@ -1739,25 +1811,27 @@ public class OrcaResource {
     // ORCA 転帰
     private void storeOutcome(RegisteredDiagnosisModel rdm, String data) {
         if (data != null) {
-            if (data.equals("1")) {
-                rdm.setOutcome("fullyRecovered");
-                rdm.setOutcomeDesc("全治");
-                rdm.setOutcomeCodeSys("MML0016");
-
-            } else if (data.equals("2")) {
-                rdm.setOutcome("died");
-                rdm.setOutcomeDesc("死亡");
-                rdm.setOutcomeCodeSys("MML0016");
-
-            } else if (data.equals("3")) {
-                rdm.setOutcome("pause");
-                rdm.setOutcomeDesc("中止");
-                rdm.setOutcomeCodeSys("MML0016");
-
-            } else if (data.equals("8")) {
-                rdm.setOutcome("transfer");
-                rdm.setOutcomeDesc("転医");
-                rdm.setOutcomeCodeSys("MML0016");
+            switch (data) {
+                case "1":
+                    rdm.setOutcome("fullyRecovered");
+                    rdm.setOutcomeDesc("全治");
+                    rdm.setOutcomeCodeSys("MML0016");
+                    break;
+                case "2":
+                    rdm.setOutcome("died");
+                    rdm.setOutcomeDesc("死亡");
+                    rdm.setOutcomeCodeSys("MML0016");
+                    break;
+                case "3":
+                    rdm.setOutcome("pause");
+                    rdm.setOutcomeDesc("中止");
+                    rdm.setOutcomeCodeSys("MML0016");
+                    break;
+                case "8":
+                    rdm.setOutcome("transfer");
+                    rdm.setOutcomeDesc("転医");
+                    rdm.setOutcomeCodeSys("MML0016");
+                    break;
             }
         }
     }

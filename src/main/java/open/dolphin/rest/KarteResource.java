@@ -161,14 +161,7 @@ public class KarteResource extends AbstractResource {
             list.add(Long.parseLong(s));
         }
 
-        //- debug
-        //System.out.println("debug->" + servletReq.getHeader("clientVersion"));
-        String clientVersion = servletReq.getHeader("clientVersion");
-        
         List<DocumentModel> result = karteServiceBean.getDocuments(list);
-        
-//        if(clientVersion.isEmpty()) {
-//        }
         DocumentList wrapper = new DocumentList();
         wrapper.setList(result);
 

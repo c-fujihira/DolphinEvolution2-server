@@ -89,7 +89,7 @@ public class ServletStartup {
     }
 
     //- 指定時刻にpvtListのClear, Initを行う
-    @Schedule(hour = "*", minute = "*/1", persistent = true)
+    @Schedule(hour = "*", minute = "*/1", persistent = false)
     public void pvtChange() {
 
         ServerConfigrationModel cfg = servCfgBean.getStatusQuery();
